@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  telegram-forwarder:
+    image: feassh/telegram-forwarder:latest
+    container_name: telegram-forwarder
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      # 持久化 session 文件，避免每次重启都需要重新登录
+      - ./sessions:/app/sessions
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
