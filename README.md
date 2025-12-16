@@ -7,7 +7,7 @@
 - 🚀 实时转发 Telegram 消息到企业微信、飞书或自定义 HTTP API
   - 支持企业微信群机器人
   - 支持企业微信自建应用（推送到指定用户）
-- 🔕 智能过滤：自动识别并跳过已静音的对话
+- 🔕 智能过滤：自动识别并跳过免打扰的对话
 - 📋 灵活配置：支持白名单/黑名单模式
 - 🐳 Docker 部署：一键启动，轻松维护
 - 🔐 安全可靠：使用官方 Telethon 库，Session 持久化
@@ -151,7 +151,7 @@ CUSTOM_API_HEADERS=Authorization:Bearer token,X-Custom-Header:value
 ### 过滤配置
 
 ```bash
-# 是否过滤静音对话（推荐开启）
+# 是否过滤免打扰对话（推荐开启）
 FILTER_MUTED=true
 
 # 白名单：仅转发这些对话（逗号分隔的 chat_id）
@@ -219,7 +219,7 @@ git push origin v1.0.0
 
 ### 消息未转发
 
-- 检查对话是否被静音（如果启用了 `FILTER_MUTED`）
+- 检查对话是否被免打扰（如果启用了 `FILTER_MUTED`）
 - 检查白名单/黑名单配置
 - 查看日志确认是否收到消息事件
 

@@ -14,7 +14,6 @@ RUN mkdir -p /app/sessions
 
 # 设置环境变量
 ENV PYTHONUNBUFFERED=1
-ENV SESSION_NAME=/app/sessions/forwarder_session
 
 # 运行程序
 CMD ["python", "main.py"]

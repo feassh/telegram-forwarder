@@ -32,7 +32,6 @@ class TelegramForwarder:
         self.api_id = os.getenv('TELEGRAM_API_ID')
         self.api_hash = os.getenv('TELEGRAM_API_HASH')
         self.phone = os.getenv('TELEGRAM_PHONE')
-        self.session_name = os.getenv('SESSION_NAME', 'forwarder_session')
 
         # 转发配置
         forwarder_type = os.getenv('FORWARDER_TYPE', 'wecom').lower()
@@ -47,7 +46,7 @@ class TelegramForwarder:
         self._validate_config()
 
         # 创建客户端
-        self.client = TelegramClient(self.session_name, self.api_id, self.api_hash)
+        self.client = TelegramClient('sessions/forwarder_session', self.api_id, self.api_hash)
 
         logger.info(f"初始化完成，转发器类型: {forwarder_type}")
 
