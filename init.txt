@@ -1,0 +1,6 @@
+docker run -it \
+  --rm \
+  -v $(pwd)/sessions:/app/sessions \
+  --env-file .env \
+  feassh/telegram-forwarder:latest \
+  python login.py
