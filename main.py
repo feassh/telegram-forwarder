@@ -70,11 +70,23 @@ class TelegramForwarder:
     async def is_chat_muted(self, event) -> bool:
         """检查当前消息所属对话是否处于免打扰状态"""
         try:
-            peer = event.message.peer_id  # Or event.chat for the entity
-            input_peer = await self.client.get_input_entity(peer)
+            # peer = event.message.peer_id  # Or event.chat for the entity
+            # input_peer = await self.client.get_input_entity(peer)
+            #
+            # settings = await self.client(functions.account.GetNotifySettingsRequest(
+            #     peer=types.InputNotifyPeer(input_peer)
+            # ))
+
+            # 先尝试从事件中获取输入聊天（input_chat），它通常已缓存
+            input_chat = event.input_chat
+            if input_chat:
+                input_peer = types.InputNotifyPeer(input_chat)
+            else:
+                # 备选：从 chat_id 获取输入实体（可能仍会报错，但概率较低）
+                input_peer = types.InputNotifyPeer(await self.client.get_input_entity(event.chat_id))
 
             settings = await self.client(functions.account.GetNotifySettingsRequest(
-                peer=types.InputNotifyPeer(input_peer)
+                peer=input_peer
             ))
 
             mute_until = settings.mute_until
