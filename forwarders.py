@@ -66,8 +66,8 @@ class WeComForwarder(BaseForwarder):
 
         # 构建企业微信消息格式
         message = f"**{content['chat_title']}**\n"
-        message += f"发送者: {content['sender']}\n"
-        message += f"消息: {content['message']}"
+        message += f"消息: {content['message']}\n"
+        message += f"发送者: {content['sender']}"
 
         data = {
             "msgtype": "markdown",
@@ -143,8 +143,8 @@ class WeComAppForwarder(BaseForwarder):
 
         # 构建消息内容
         message_text = f"{content['chat_title']}\n"
-        message_text += f"发送者: {content['sender']}\n"
-        message_text += f"消息: {content['message']}"
+        message_text += f"消息: {content['message']}\n"
+        message_text += f"发送者: {content['sender']}"
 
         # 构建发送消息的请求
         url = f"https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token={access_token}"
@@ -199,8 +199,8 @@ class FeishuForwarder(BaseForwarder):
 
         # 构建飞书消息格式
         message = f"**{content['chat_title']}**\n"
-        message += f"发送者: {content['sender']}\n"
-        message += f"消息: {content['message']}"
+        message += f"消息: {content['message']}\n"
+        message += f"发送者: {content['sender']}"
 
         data = {
             "msg_type": "text",

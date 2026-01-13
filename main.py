@@ -118,6 +118,49 @@ class TelegramForwarder:
             # 保守策略：异常时视为静音，避免误触发逻辑
             return True
 
+    async def is_chat_joined(self, event) -> bool:
+        """检查当前用户是否加入了该对话（群组/频道）
+        
+        对于私聊和频道：直接返回 True
+        对于群组：检查用户是否是成员
+        """
+        try:
+            chat = await event.get_chat()
+            
+            # 私聊：直接返回 True
+            if isinstance(chat, User):
+                return True
+            
+            # 频道（broadcast=True 表示是广播频道，不是群组）
+            if isinstance(chat, Channel):
+                # 广播频道：直接返回 True
+                if chat.broadcast:
+                    return True
+                
+                # 超级群组或普通群组：检查 left 属性
+                # left=True 表示用户已离开或从未加入
+                if chat.left:
+                    logger.debug(f"用户未加入群组 {chat.title} (id: {chat.id})")
+                    return False
+                
+                return True
+            
+            # 普通群组（Chat 类型）
+            if isinstance(chat, Chat):
+                # 检查 left 属性
+                if chat.left:
+                    logger.debug(f"用户未加入群组 {chat.title} (id: {chat.id})")
+                    return False
+                return True
+            
+            # 未知类型，保守处理
+            return True
+            
+        except Exception as e:
+            logger.warning(f"检查加入状态失败: {e}")
+            # 保守策略：异常时视为未加入，避免转发不相关消息
+            return False
+
     async def should_forward(self, event) -> bool:
         """判断消息是否应该转发"""
         # 过滤服务消息
@@ -125,6 +168,11 @@ class TelegramForwarder:
             return False
 
         chat_id = event.chat_id
+
+        # 检查是否加入了该群组（对于群组消息，只转发已加入的群组）
+        if not await self.is_chat_joined(event):
+            logger.debug(f"未加入对话 {chat_id}，跳过消息")
+            return False
 
         # 白名单检查
         if self.whitelist_chats and str(chat_id) not in self.whitelist_chats:
